@@ -270,7 +270,11 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
         daily_key, exp_key, pkg_key = "daily_15", "exp_15", "pkg_15"
     
     await update.message.reply_text(_(context, "received"))
-    await asyncio.sleep(90)
+    await asyncio.sleep(10)
+    await update.message.reply_text("🔍 جاري التحقق من المعاملة على شبكة البلوكشين...")
+    await asyncio.sleep(10)
+    await update.message.reply_text("✅ المعاملة مؤكدة. جاري تجهيز بطاقتك...")
+    await asyncio.sleep(10)
     
     fake = generate_fullz()
     text = f"""
@@ -298,10 +302,7 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data['proof_data'] = ''
 
 def main():
-    # تشغيل HTTP Server في خيط منفصل
     threading.Thread(target=run_server, daemon=True).start()
-    
-    # تشغيل البوت
     app = Application.builder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.Document.ALL | filters.PHOTO, handle_document))
