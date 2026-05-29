@@ -2,21 +2,22 @@ import asyncio
 import logging
 import random
 import threading
-from flask import Flask
+from http.server import HTTPServer, BaseHTTPRequestHandler
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 
-# ========== Flask for Render ==========
-app_flask = Flask(__name__)
+# ========== Simple HTTP Server for Render ==========
+class Handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Sakura is alive")
 
-@app_flask.route('/')
-def home():
-    return "🌸 Sakura is alive"
-
-def run_flask():
-    app_flask.run(host='0.0.0.0', port=10000)
+def run_server():
+    server = HTTPServer(('0.0.0.0', 10000), Handler)
+    server.serve_forever()
 
 # ========== الإعدادات ==========
 BOT_TOKEN = "8805749137:AAGCA8zTxA_OpowLWpy_wX8pjPa9Q3wP"
@@ -297,7 +298,10 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data['proof_data'] = ''
 
 def main():
-    threading.Thread(target=run_flask).start()
+    # تشغيل HTTP Server في خيط منفصل
+    threading.Thread(target=run_server, daemon=True).start()
+    
+    # تشغيل البوت
     app = Application.builder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.Document.ALL | filters.PHOTO, handle_document))
