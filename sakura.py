@@ -20,7 +20,7 @@ def run_server():
     server.serve_forever()
 
 # ========== الإعدادات ==========
-BOT_TOKEN = "8805749137:AAGCA8zTxA_OpowLWpy_wX8pjPa9Q3wP"
+BOT_TOKEN = "8805749137:AAGCA8zTxA_OpowLWpy_wX8pjPa9Q3wP-3Y"
 WALLET_ADDRESS = "0x27af4d8bd1f755697c4B5a8EcC297Ed6Ea1df99D"
 BIN_CHECK_URL = "https://cdpn.io/Kh4y/debug/qEqVPpj/full"
 
